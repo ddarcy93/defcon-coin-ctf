@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Sentinel Cyber Human CTF</title>
+
+<style>
+
+body {
+    background:#111;
+    color:#00ff00;
+    font-family: monospace;
+    text-align:center;
+    padding:40px;
+}
+
+.box {
+    border:2px solid #00ff00;
+    padding:20px;
+    max-width:500px;
+    margin:auto;
+}
+
+button {
+    background:#00ff00;
+    color:#000;
+    padding:15px;
+    border:none;
+    font-size:18px;
+}
+
+input {
+    padding:10px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="box">
+
+<h1>SENTINEL CYBER</h1>
+
+<h2>DEF CON HUMAN CTF</h2>
+
+<p>
+You found the token.
+</p>
+
+<p>
+The vulnerability is not in the code.
+</p>
+
+<p>
+It is in the human.
+</p>
+
+
+<h3>Challenge #1</h3>
+
+<p>
+A CEO emails the help desk:
+</p>
+
+<p>
+"I forgot my password.
+Reset my account immediately."
+</p>
+
+<p>
+No verification was performed.
+</p>
+
+
+<p>
+Should the request be approved?
+</p>
+
+
+<button onclick="answer()">
+SUBMIT ANSWER
+</button>
+
+
+<p id="result"></p>
+
+
+</div>
+
+
+<script>
+
+function answer(){
+
+let response = prompt(
+"Approve the request? YES or NO"
+);
+
+
+if(response.toLowerCase()=="no"){
+
+document.getElementById("result").innerHTML =
+"CORRECT<br><br>FLAG{VERIFY_BEFORE_TRUST}<br><br>Human verification matters.";
+
+}
+
+else{
+
+document.getElementById("result").innerHTML =
+"FAILED<br><br>You trusted the request without verification.";
+
+}
+
+}
+
+</script>
+
+
+</body>
+
+</html>
