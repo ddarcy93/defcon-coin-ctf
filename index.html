@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -161,14 +162,9 @@
                 Challenge completed. Your signal has been authenticated.
             </p>
 
-            <!-- Easter-egg page -->
-            <a href="easter-eggs.html">
-                <button type="button">
-                    DECODE THE COIN
-                </button>
-            </a>
-
-            <br>
+            <p>
+                Record your discovery in the SIGNALGHOST guestbook.
+            </p>
 
             <!-- Google Form guestbook -->
             <a
@@ -208,7 +204,7 @@
                 "Approve the request? Enter YES or NO."
             );
 
-            // Prevent an error if the visitor presses Cancel.
+            // Stop if the visitor presses Cancel.
             if (response === null) {
                 return;
             }
@@ -229,15 +225,6 @@
                     "FLAG{VERIFY_BEFORE_TRUST}<br><br>" +
                     "Human verification matters.";
 
-                /*
-                 * Records that the visitor passed the challenge.
-                 * This remains active while the browser tab is open.
-                 */
-                sessionStorage.setItem(
-                    "signalghostCTFPassed",
-                    "true"
-                );
-
                 unlockedSection.classList.remove("hidden");
 
             } else if (normalizedResponse === "yes") {
@@ -246,10 +233,6 @@
                     "<strong>FAILED</strong><br><br>" +
                     "You trusted the request without verification.<br><br>" +
                     "Verify identity through an approved secondary channel.";
-
-                sessionStorage.removeItem(
-                    "signalghostCTFPassed"
-                );
 
                 unlockedSection.classList.add("hidden");
 
@@ -262,28 +245,8 @@
                 unlockedSection.classList.add("hidden");
             }
         }
-
-
-        /*
-         * Restores the unlocked buttons if the visitor returns
-         * from the Easter-egg page during the same browser session.
-         */
-        document.addEventListener(
-            "DOMContentLoaded",
-            function () {
-                const passed =
-                    sessionStorage.getItem(
-                        "signalghostCTFPassed"
-                    ) === "true";
-
-                if (passed) {
-                    document
-                        .getElementById("unlockedSection")
-                        .classList.remove("hidden");
-                }
-            }
-        );
     </script>
 
 </body>
 </html>
+```
