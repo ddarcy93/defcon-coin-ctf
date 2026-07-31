@@ -42,6 +42,17 @@
             background: #00cc00;
         }
 
+        .secondary-button {
+            background: #111;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+        }
+
+        .secondary-button:hover {
+            background: #00ff00;
+            color: #000;
+        }
+
         .hidden {
             display: none;
         }
@@ -58,6 +69,16 @@
         }
 
         .warning {
+            color: #ffff00;
+        }
+
+        .unlocked-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #00ff00;
+        }
+
+        .unlocked-message {
             color: #ffff00;
         }
 
@@ -132,21 +153,32 @@
 
         <p id="result"></p>
 
-        <!-- Hidden until the correct answer is entered -->
-        <div id="guestbookSection" class="hidden">
 
-            <p>
+        <!-- Hidden until the correct answer is entered -->
+        <div id="unlockedSection" class="hidden unlocked-section">
+
+            <p class="unlocked-message">
                 Challenge completed. Your signal has been authenticated.
             </p>
 
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLScpSUhQ_AiXdb4502xcqYBFtYumK-FBGkKPIRBVOs0r3Q4_bA/viewform?usp=header"
-               target="_blank"
-               rel="noopener noreferrer">
-
+            <!-- Easter-egg page -->
+            <a href="easter-eggs.html">
                 <button type="button">
+                    DECODE THE COIN
+                </button>
+            </a>
+
+            <br>
+
+            <!-- Google Form guestbook -->
+            <a
+                href="https://docs.google.com/forms/d/e/1FAIpQLScpSUhQ_AiXdb4502xcqYBFtYumK-FBGkKPIRBVOs0r3Q4_bA/viewform?usp=header"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <button type="button" class="secondary-button">
                     LEAVE YOUR MARK
                 </button>
-
             </a>
 
         </div>
@@ -156,10 +188,14 @@
 
     <script>
         function continueChallenge() {
-            document.getElementById("introScreen").classList.add("hidden");
-            document.getElementById("challengeScreen").classList.remove("hidden");
+            document
+                .getElementById("introScreen")
+                .classList.add("hidden");
 
-            // Move the visitor to the top of the challenge.
+            document
+                .getElementById("challengeScreen")
+                .classList.remove("hidden");
+
             window.scrollTo({
                 top: 0,
                 behavior: "smooth"
@@ -172,14 +208,19 @@
                 "Approve the request? Enter YES or NO."
             );
 
-            // Prevents an error if the visitor presses Cancel.
+            // Prevent an error if the visitor presses Cancel.
             if (response === null) {
                 return;
             }
 
-            const normalizedResponse = response.trim().toLowerCase();
-            const result = document.getElementById("result");
-            const guestbook = document.getElementById("guestbookSection");
+            const normalizedResponse =
+                response.trim().toLowerCase();
+
+            const result =
+                document.getElementById("result");
+
+            const unlockedSection =
+                document.getElementById("unlockedSection");
 
             if (normalizedResponse === "no") {
 
@@ -188,7 +229,16 @@
                     "FLAG{VERIFY_BEFORE_TRUST}<br><br>" +
                     "Human verification matters.";
 
-                guestbook.classList.remove("hidden");
+                /*
+                 * Records that the visitor passed the challenge.
+                 * This remains active while the browser tab is open.
+                 */
+                sessionStorage.setItem(
+                    "signalghostCTFPassed",
+                    "true"
+                );
+
+                unlockedSection.classList.remove("hidden");
 
             } else if (normalizedResponse === "yes") {
 
@@ -197,7 +247,11 @@
                     "You trusted the request without verification.<br><br>" +
                     "Verify identity through an approved secondary channel.";
 
-                guestbook.classList.add("hidden");
+                sessionStorage.removeItem(
+                    "signalghostCTFPassed"
+                );
+
+                unlockedSection.classList.add("hidden");
 
             } else {
 
@@ -205,9 +259,30 @@
                     "INVALID RESPONSE<br><br>" +
                     "Enter YES or NO.";
 
-                guestbook.classList.add("hidden");
+                unlockedSection.classList.add("hidden");
             }
         }
+
+
+        /*
+         * Restores the unlocked buttons if the visitor returns
+         * from the Easter-egg page during the same browser session.
+         */
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+                const passed =
+                    sessionStorage.getItem(
+                        "signalghostCTFPassed"
+                    ) === "true";
+
+                if (passed) {
+                    document
+                        .getElementById("unlockedSection")
+                        .classList.remove("hidden");
+                }
+            }
+        );
     </script>
 
 </body>
