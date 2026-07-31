@@ -1,0 +1,31 @@
+<div id="accessDenied" class="hidden">
+    <h1>ACCESS DENIED</h1>
+
+    <p>
+        Complete the SIGNALGHOST Human CTF to decode the coin.
+    </p>
+
+    <a href="index.html">
+        <button type="button">
+            RETURN TO CTF
+        </button>
+    </a>
+</div>
+
+<script>
+    const passed =
+        sessionStorage.getItem(
+            "signalghostCTFPassed"
+        ) === "true";
+
+    const decodedContent =
+        document.getElementById("decodedContent");
+
+    const accessDenied =
+        document.getElementById("accessDenied");
+
+    if (!passed) {
+        decodedContent.classList.add("hidden");
+        accessDenied.classList.remove("hidden");
+    }
+</script>
