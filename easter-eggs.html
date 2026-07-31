@@ -1,31 +1,819 @@
-<div id="accessDenied" class="hidden">
-    <h1>ACCESS DENIED</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
 
-    <p>
-        Complete the SIGNALGHOST Human CTF to decode the coin.
-    </p>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <a href="index.html">
-        <button type="button">
+    <title>SIGNALGHOST Coin Decoder</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background:
+                radial-gradient(
+                    circle at top,
+                    #102010 0%,
+                    #080b08 35%,
+                    #020402 100%
+                );
+            color: #d8ffd8;
+            font-family: "Courier New", monospace;
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(0, 255, 0, 0.025),
+                    rgba(0, 255, 0, 0.025) 1px,
+                    transparent 1px,
+                    transparent 4px
+                );
+            z-index: 999;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .page-container {
+            width: min(1180px, 94%);
+            margin: 0 auto;
+            padding: 30px 0 60px;
+        }
+
+        .terminal-bar {
+            border: 1px solid #00ff00;
+            background: rgba(0, 30, 0, 0.75);
+            padding: 10px 15px;
+            margin-bottom: 25px;
+            color: #00ff00;
+            font-size: 14px;
+            letter-spacing: 1px;
+            box-shadow: 0 0 18px rgba(0, 255, 0, 0.2);
+        }
+
+        .hero {
+            border: 2px solid #00ff00;
+            padding: 32px 20px;
+            text-align: center;
+            background: rgba(0, 15, 0, 0.8);
+            box-shadow:
+                0 0 25px rgba(0, 255, 0, 0.18),
+                inset 0 0 25px rgba(0, 255, 0, 0.04);
+        }
+
+        .status {
+            display: inline-block;
+            color: #111;
+            background: #00ff00;
+            padding: 7px 14px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            color: #00ff00;
+            font-size: clamp(32px, 7vw, 70px);
+            letter-spacing: 5px;
+            text-shadow: 0 0 12px rgba(0, 255, 0, 0.5);
+        }
+
+        .subtitle {
+            margin: 8px 0 0;
+            color: #9eff9e;
+            font-size: clamp(14px, 3vw, 21px);
+            letter-spacing: 2px;
+        }
+
+        .hero-quote {
+            margin: 25px auto 0;
+            max-width: 700px;
+            color: #ffff66;
+            font-size: clamp(18px, 3vw, 25px);
+        }
+
+        .instruction {
+            margin: 20px auto 0;
+            color: #a0a0a0;
+            font-size: 14px;
+        }
+
+        .coin-panel {
+            margin-top: 28px;
+            padding: 18px;
+            border: 1px solid #336633;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .coin-image {
+            display: block;
+            width: 100%;
+            max-width: 1100px;
+            height: auto;
+            margin: 0 auto;
+            border: 1px solid #00aa00;
+            cursor: zoom-in;
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .coin-image:hover {
+            transform: scale(1.01);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.28);
+        }
+
+        .section-heading {
+            margin: 45px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #00ff00;
+            color: #00ff00;
+            font-size: clamp(24px, 5vw, 38px);
+            letter-spacing: 2px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            position: relative;
+            padding: 22px;
+            border: 1px solid #315b31;
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(0, 25, 0, 0.95),
+                    rgba(5, 8, 5, 0.95)
+                );
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: #00ff00;
+            box-shadow: 0 0 16px rgba(0, 255, 0, 0.14);
+        }
+
+        .card-number {
+            position: absolute;
+            top: 14px;
+            right: 15px;
+            color: #315b31;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .card h3 {
+            margin: 0 40px 8px 0;
+            color: #00ff00;
+            font-size: 19px;
+        }
+
+        .card p {
+            margin: 0;
+            color: #cef5ce;
+        }
+
+        .tag {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 3px 8px;
+            border: 1px solid #527852;
+            color: #9eff9e;
+            font-size: 12px;
+        }
+
+        .meaning-panel {
+            margin-top: 45px;
+            border: 1px solid #00ff00;
+            background: rgba(0, 20, 0, 0.75);
+            padding: 26px;
+        }
+
+        .meaning-panel h2 {
+            margin-top: 0;
+            color: #00ff00;
+        }
+
+        .meaning-panel p {
+            color: #d8ffd8;
+        }
+
+        .broken-trace {
+            border-left: 5px solid #ffff00;
+            padding-left: 18px;
+            margin-top: 22px;
+        }
+
+        .broken-trace strong {
+            color: #ffff00;
+        }
+
+        .footer-quote {
+            margin-top: 45px;
+            padding: 35px 20px;
+            border-top: 1px solid #00ff00;
+            border-bottom: 1px solid #00ff00;
+            text-align: center;
+            background: rgba(0, 18, 0, 0.65);
+        }
+
+        .footer-quote blockquote {
+            margin: 0;
+            color: #ffff66;
+            font-size: clamp(20px, 4vw, 30px);
+        }
+
+        .footer-quote p {
+            margin: 18px 0 0;
+            color: #9eff9e;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 35px;
+        }
+
+        .action-button {
+            display: inline-block;
+            padding: 14px 22px;
+            border: 2px solid #00ff00;
+            background: #00ff00;
+            color: #000;
+            text-decoration: none;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .action-button:hover {
+            background: #111;
+            color: #00ff00;
+        }
+
+        .secondary-button {
+            background: #111;
+            color: #00ff00;
+        }
+
+        .secondary-button:hover {
+            background: #00ff00;
+            color: #000;
+        }
+
+        .access-denied {
+            width: min(600px, 92%);
+            margin: 100px auto;
+            padding: 35px 22px;
+            border: 2px solid #ff3333;
+            background: #120404;
+            color: #ff7777;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.18);
+        }
+
+        .access-denied h1 {
+            color: #ff3333;
+            font-size: clamp(30px, 7vw, 55px);
+        }
+
+        .denied-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 14px 22px;
+            border: 2px solid #ff3333;
+            color: #ff7777;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .denied-button:hover {
+            background: #ff3333;
+            color: #000;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.96);
+            overflow: auto;
+        }
+
+        .modal.open {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-image {
+            display: block;
+            width: auto;
+            max-width: 96vw;
+            max-height: 92vh;
+            border: 1px solid #00ff00;
+            cursor: zoom-out;
+        }
+
+        .close-modal {
+            position: fixed;
+            top: 15px;
+            right: 22px;
+            z-index: 1001;
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 15px;
+            font-family: monospace;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .page-container {
+                width: 96%;
+                padding-top: 15px;
+            }
+
+            .hero {
+                padding: 25px 14px;
+            }
+
+            .coin-panel {
+                padding: 8px;
+            }
+
+            .card {
+                padding: 19px;
+            }
+
+            .action-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Everything inside this section is hidden unless the CTF was passed -->
+    <main id="decodedContent" class="page-container">
+
+        <div class="terminal-bar">
+            &gt; AUTHENTICATION VERIFIED<br>
+            &gt; FLAG ACCEPTED<br>
+            &gt; SIGNALGHOST ARCHIVE UNLOCKED
+        </div>
+
+        <section class="hero">
+
+            <div class="status">
+                ACCESS GRANTED
+            </div>
+
+            <h1>SIGNALGHOST</h1>
+
+            <p class="subtitle">
+                DEF CON 34 COIN DECODER
+            </p>
+
+            <p class="hero-quote">
+                “QUESTION EVERY SIGNAL.”
+            </p>
+
+            <p class="instruction">
+                Select the coin image to open the full-size decoder.
+            </p>
+
+        </section>
+
+
+        <section class="coin-panel">
+
+            <img
+                id="coinImage"
+                class="coin-image"
+                src="images/defcon34-coin-easter-eggs.png"
+                alt="SIGNALGHOST DEF CON 34 coin showing the front, back, and hidden Easter eggs"
+            >
+
+        </section>
+
+
+        <h2 class="section-heading">
+            FRONT SIGNALS
+        </h2>
+
+        <section class="grid">
+
+            <article class="card">
+                <span class="card-number">01</span>
+                <h3>SG Circuit Mark</h3>
+                <p>
+                    The initials SG are concealed in the circuit
+                    traces near the upper center of the coin.
+                </p>
+                <span class="tag">IDENTITY MARKER</span>
+            </article>
+
+            <article class="card">
+                <span class="card-number">02</span>
+                <h3>CySA+</h3>
+                <p>
+                    A CySA+ certification reference is blended into
+                    the upper-left circuit pattern.
+                </p>
+                <span class="tag">CERTIFICATION</span>
+            </article>
+
+            <article class="card">
+                <span class="card-number">03</span>
+                <h3>Security+</h3>
+                <p>
+                    The abbreviated Sec+ reference is hidden in the
+                    upper-right circuit network.
+                </p>
+                <span class="tag">CERTIFICATION</span>
+            </article>
+
+            <article class="card">
+                <span class="card-number">04</span>
+                <h3>The Hidden X</h3>
+                <p>
+                    A small X is placed beneath SIGNALGHOST. It can
+                    represent an unknown variable, target, or hidden
+                    element waiting to be discovered.
+                </p>
+                <span class="tag">UNKNOWN VARIABLE</span>
+            </article>
+
+            <article class="card">
+                <span class="card-number">05</span>
+                <h3>Negative-Space Skull</h3>
+                <p>
+                    The skull is formed by the surrounding circuitry
+                    and empty space instead of a conventional outline.
+                </p>
+                <span class="tag">NEGATIVE SPACE</span>
+            </article>
+
+            <article class="card">
+                <span class="card-number">06</span>
+                <h3>Broken Trace</h3>
+                <p>
+                    One trace in the lower-left quadrant is
+                    intentionally interrupted. The flaw is part of
+                    the challenge, not a manufacturing mistake.
+                </p>
+                <span class="tag">HIDDEN FAILURE</span>
+            </article>
+
+            <article class="card">
+                <span class="card-number">07</span>
+                <h3>Oscilloscope Signal</h3>
+                <p>
+                    The waveform near the lower edge contains a
+                    stylized SG reference embedded into its shape.
+                </p>
+                <span class="tag">SIGNAL ANALYSIS</span>
+            </article>
+
+            <article class="card">
+                <span class="card-number">08</span>
+                <h3>Hexadecimal Coin Number</h3>
+                <p>
+                    Each coin can have a unique number represented in
+                    hexadecimal. Coin 42, for example, becomes 0x2A.
+                </p>
+                <span class="tag">UNIQUE IDENTIFIER</span>
+            </article>
+
+        </section>
+
+
+        <h2 class="section-heading">
+            BACK SIGNALS
+        </h2>
+
+        <section class="grid">
+
+            <article class="card">
+                <span class="card-number">01</span>
+                <h3>Network+</h3>
+                <p>
+                    A Network+ reference is concealed within the
+                    left-side circuit traces.
+                </p>
+                <span class="tag">CERTIFICATION</span>
+            </article>
+
+            <article class="card">
+                <span class="card-number">02</span>
+                <h3>Cloud+</h3>
+                <p>
+                    A Cloud+ certification reference is hidden inside
+                    the right-side circuitry.
+                </p>
+                <span class="tag">CERTIFICATION</span>
+            </article>
+
+            <article class="card">
+                <span class="card-number">03</span>
+                <h3>SG-X Designation</h3>
+                <p>
+                    The designation SG-X appears beneath the NFC icon
+                    as a secondary SIGNALGHOST model identifier.
+                </p>
+                <span class="tag">DEVICE DESIGNATION</span>
+            </article>
+
+            <article class="card">
+                <span class="card-number">04</span>
+                <h3>Morse Code</h3>
+                <p>
+                    A Morse-code pattern is integrated into the trace
+                    widths. The encoded result represents SG.
+                </p>
+                <span class="tag">ENCODED MESSAGE</span>
+            </article>
+
+            <article class="card">
+                <span class="card-number">05</span>
+                <h3>Hardware Test Pads</h3>
+                <p>
+                    TX, RX, CLK, GND, and VCC are hidden throughout
+                    the board as authentic-looking hardware labels.
+                </p>
+                <span class="tag">HARDWARE HACKING</span>
+            </article>
+
+            <article class="card">
+                <span class="card-number">06</span>
+                <h3>U404 and CTF</h3>
+                <p>
+                    U404 blends a circuit component designator with
+                    the familiar 404 error. CTF refers to Capture the
+                    Flag.
+                </p>
+                <span class="tag">HACKER CULTURE</span>
+            </article>
+
+            <article class="card">
+                <span class="card-number">07</span>
+                <h3>Secondary Waveform</h3>
+                <p>
+                    A second oscilloscope-style waveform appears near
+                    the lower edge of the back design.
+                </p>
+                <span class="tag">SIGNAL ANALYSIS</span>
+            </article>
+
+            <article class="card">
+                <span class="card-number">08</span>
+                <h3>Negative-Space Ghost</h3>
+                <p>
+                    A ghost silhouette is formed inside the circuit
+                    pattern rather than drawn as a normal image.
+                </p>
+                <span class="tag">SIGNALGHOST MARK</span>
+            </article>
+
+            <article class="card">
+                <span class="card-number">09</span>
+                <h3>Interrupted Trace</h3>
+                <p>
+                    Another intentionally broken circuit path appears
+                    in the upper-right quadrant.
+                </p>
+                <span class="tag">HIDDEN FAILURE</span>
+            </article>
+
+        </section>
+
+
+        <section class="meaning-panel">
+
+            <h2>THE MEANING BEHIND THE COIN</h2>
+
+            <p>
+                The design looks like a functioning circuit board,
+                but many traces are decorative, misleading, or
+                intentionally incomplete. That mirrors a real
+                investigation: not every clue is useful, and not
+                every signal should be trusted.
+            </p>
+
+            <p>
+                The certifications identify the knowledge behind the
+                design. The NFC tag creates the interaction. The
+                social-engineering CTF tests whether the visitor will
+                question urgency, authority, and incomplete
+                verification.
+            </p>
+
+            <div class="broken-trace">
+                <strong>THE BROKEN TRACE</strong>
+
+                <p>
+                    A system may appear complete while one hidden
+                    weakness undermines everything. On this coin, the
+                    trace is broken. In the CTF, the vulnerability is
+                    human trust without verification.
+                </p>
+            </div>
+
+        </section>
+
+
+        <section class="footer-quote">
+
+            <blockquote>
+                “QUESTION EVERY SIGNAL.”
+            </blockquote>
+
+            <p>
+                The vulnerability is not in the code.<br>
+                It is in the human.<br><br>
+                — SIGNALGHOST
+            </p>
+
+        </section>
+
+
+        <div class="button-row">
+
+            <a href="index.html" class="action-button">
+                RETURN TO CTF
+            </a>
+
+            <a
+                href="https://docs.google.com/forms/d/e/1FAIpQLScpSUhQ_AiXdb4502xcqYBFtYumK-FBGkKPIRBVOs0r3Q4_bA/viewform?usp=header"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="action-button secondary-button"
+            >
+                LEAVE YOUR MARK
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <!-- Shown when someone opens this page without passing the CTF -->
+    <section id="accessDenied" class="access-denied hidden">
+
+        <h1>ACCESS DENIED</h1>
+
+        <p>
+            The SIGNALGHOST coin archive is locked.
+        </p>
+
+        <p>
+            Complete the Human CTF before attempting to decode the
+            hidden signals.
+        </p>
+
+        <a href="index.html" class="denied-button">
             RETURN TO CTF
+        </a>
+
+    </section>
+
+
+    <!-- Full-size image viewer -->
+    <div id="imageModal" class="modal">
+
+        <button
+            id="closeModal"
+            class="close-modal"
+            type="button"
+        >
+            CLOSE
         </button>
-    </a>
-</div>
 
-<script>
-    const passed =
-        sessionStorage.getItem(
-            "signalghostCTFPassed"
-        ) === "true";
+        <img
+            class="modal-image"
+            src="images/defcon34-coin-easter-eggs.png"
+            alt="Full-size SIGNALGHOST coin Easter egg decoder"
+        >
 
-    const decodedContent =
-        document.getElementById("decodedContent");
+    </div>
 
-    const accessDenied =
-        document.getElementById("accessDenied");
 
-    if (!passed) {
-        decodedContent.classList.add("hidden");
-        accessDenied.classList.remove("hidden");
-    }
-</script>
+    <script>
+        /*
+         * Check whether the visitor passed the CTF during
+         * the current browser session.
+         */
+        const passed =
+            sessionStorage.getItem(
+                "signalghostCTFPassed"
+            ) === "true";
+
+        const decodedContent =
+            document.getElementById("decodedContent");
+
+        const accessDenied =
+            document.getElementById("accessDenied");
+
+        if (!passed) {
+            decodedContent.classList.add("hidden");
+            accessDenied.classList.remove("hidden");
+        }
+
+
+        /*
+         * Full-size coin image viewer.
+         */
+        const coinImage =
+            document.getElementById("coinImage");
+
+        const imageModal =
+            document.getElementById("imageModal");
+
+        const closeModal =
+            document.getElementById("closeModal");
+
+        function openImageModal() {
+            imageModal.classList.add("open");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeImageModal() {
+            imageModal.classList.remove("open");
+            document.body.style.overflow = "";
+        }
+
+        coinImage.addEventListener(
+            "click",
+            openImageModal
+        );
+
+        closeModal.addEventListener(
+            "click",
+            closeImageModal
+        );
+
+        imageModal.addEventListener(
+            "click",
+            function (event) {
+                if (
+                    event.target === imageModal ||
+                    event.target.classList.contains("modal-image")
+                ) {
+                    closeImageModal();
+                }
+            }
+        );
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+                if (event.key === "Escape") {
+                    closeImageModal();
+                }
+            }
+        );
+    </script>
+
+</body>
+</html>
