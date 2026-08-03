@@ -1,252 +1,162 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
 
-    <!-- Makes the page display correctly on phones -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests;"
+    >
+
+    <meta name="referrer" content="no-referrer">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="SIGNALGHOST DEF CON Human CTF challenge."
+    >
 
     <title>SIGNALGHOST Human CTF</title>
 
-    <style>
-        body {
-            background: #111;
-            color: #00ff00;
-            font-family: monospace;
-            text-align: center;
-            padding: 40px 20px;
-            margin: 0;
-        }
+    <link rel="stylesheet" href="styles.css">
 
-        .box {
-            border: 2px solid #00ff00;
-            padding: 25px;
-            max-width: 500px;
-            margin: 40px auto;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.35);
-        }
-
-        button {
-            background: #00ff00;
-            color: #000;
-            padding: 15px 25px;
-            border: none;
-            font-family: monospace;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-
-        button:hover {
-            background: #00cc00;
-        }
-
-        .secondary-button {
-            background: #111;
-            color: #00ff00;
-            border: 2px solid #00ff00;
-        }
-
-        .secondary-button:hover {
-            background: #00ff00;
-            color: #000;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        #result {
-            margin-top: 25px;
-            line-height: 1.5;
-        }
-
-        .signal-line {
-            text-align: left;
-            max-width: 360px;
-            margin: 10px auto;
-        }
-
-        .warning {
-            color: #ffff00;
-        }
-
-        .unlocked-section {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #00ff00;
-        }
-
-        .unlocked-message {
-            color: #ffff00;
-        }
-
-        a {
-            text-decoration: none;
-        }
-    </style>
+    <script src="challenge.js" defer></script>
 </head>
 
 <body>
 
-    <!-- Opening screen -->
-    <div class="box" id="introScreen">
+    <main>
 
-        <h1>SIGNALGHOST</h1>
+        <!-- Opening screen -->
+        <section class="box" id="introScreen">
 
-        <p class="signal-line">&gt; NFC SIGNAL DETECTED</p>
-        <p class="signal-line">&gt; UNKNOWN TOKEN IDENTIFIED</p>
-        <p class="signal-line">&gt; ESTABLISHING SECURE CHANNEL...</p>
-        <p class="signal-line">&gt; CONNECTION ESTABLISHED</p>
+            <h1>SIGNALGHOST</h1>
 
-        <p class="warning">
-            A human-layer vulnerability has been detected.
-        </p>
+            <p class="signal-line">&gt; NFC SIGNAL DETECTED</p>
+            <p class="signal-line">&gt; UNKNOWN TOKEN IDENTIFIED</p>
+            <p class="signal-line">&gt; ESTABLISHING SECURE CHANNEL...</p>
+            <p class="signal-line">&gt; CONNECTION ESTABLISHED</p>
 
-        <button type="button" onclick="continueChallenge()">
-            CONTINUE
-        </button>
+            <p class="warning">
+                A human-layer vulnerability has been detected.
+            </p>
 
-    </div>
+            <button type="button" id="continueButton">
+                CONTINUE
+            </button>
 
-
-    <!-- Challenge screen -->
-    <div class="box hidden" id="challengeScreen">
-
-        <h1>SIGNALGHOST</h1>
-
-        <h2>DEF CON HUMAN CTF</h2>
-
-        <p>Signal detected.</p>
-
-        <p>
-            The vulnerability is not in the signal.
-        </p>
-
-        <p>
-            It is in the human.
-        </p>
-
-        <h3>Password Reset Request</h3>
-
-        <p>
-            A CEO emails the help desk:
-        </p>
-
-        <p>
-            "URGENT! I forgot my password.<br>
-            Reset my account immediately."
-        </p>
-
-        <p>
-            No verification was performed.
-        </p>
-
-        <p>
-            Should the request be approved?
-        </p>
-
-        <button type="button" onclick="answer()">
-            SUBMIT ANSWER
-        </button>
-
-        <p id="result"></p>
+        </section>
 
 
-        <!-- Hidden until the correct answer is entered -->
-        <div id="unlockedSection" class="hidden unlocked-section">
+        <!-- Challenge screen -->
+        <section
+            class="box hidden"
+            id="challengeScreen"
+            aria-live="polite"
+        >
 
-            <p class="unlocked-message">
-                Challenge completed. Your signal has been authenticated.
+            <h1>SIGNALGHOST</h1>
+
+            <h2>DEF CON HUMAN CTF</h2>
+
+            <p>Signal detected.</p>
+
+            <p>
+                The vulnerability is not in the signal.
             </p>
 
             <p>
-                Record your discovery in the SIGNALGHOST guestbook.
+                It is in the human.
             </p>
 
-            <!-- Google Form guestbook -->
-            <a
-                href="https://docs.google.com/forms/d/e/1FAIpQLScpSUhQ_AiXdb4502xcqYBFtYumK-FBGkKPIRBVOs0r3Q4_bA/viewform?usp=header"
-                target="_blank"
-                rel="noopener noreferrer"
+            <h3>Password Reset Request</h3>
+
+            <p>
+                A CEO emails the help desk:
+            </p>
+
+            <blockquote>
+                “URGENT! I forgot my password.<br>
+                Reset my account immediately.”
+            </blockquote>
+
+            <p>
+                No identity verification was performed.
+            </p>
+
+            <p>
+                Should the request be approved?
+            </p>
+
+            <div
+                class="answer-buttons"
+                id="answerButtons"
+                aria-label="Select an answer"
             >
-                <button type="button" class="secondary-button">
-                    LEAVE YOUR MARK
+                <button type="button" id="yesButton">
+                    YES
                 </button>
-            </a>
 
-        </div>
+                <button
+                    type="button"
+                    id="noButton"
+                    class="secondary-button"
+                >
+                    NO
+                </button>
+            </div>
 
-    </div>
-
-
-    <script>
-        function continueChallenge() {
-            document
-                .getElementById("introScreen")
-                .classList.add("hidden");
-
-            document
-                .getElementById("challengeScreen")
-                .classList.remove("hidden");
-
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        }
+            <div
+                id="result"
+                role="status"
+                aria-live="polite"
+            ></div>
 
 
-        function answer() {
-            const response = prompt(
-                "Approve the request? Enter YES or NO."
-            );
+            <!-- Hidden until the correct answer is selected -->
+            <div
+                id="unlockedSection"
+                class="hidden unlocked-section"
+            >
 
-            // Stop if the visitor presses Cancel.
-            if (response === null) {
-                return;
-            }
+                <p class="unlocked-message">
+                    Challenge completed. Your signal has been authenticated.
+                </p>
 
-            const normalizedResponse =
-                response.trim().toLowerCase();
+                <p>
+                    Record your discovery in the SIGNALGHOST guestbook.
+                </p>
 
-            const result =
-                document.getElementById("result");
+                <a
+                    href="https://docs.google.com/forms/d/e/1FAIpQLScpSUhQ_AiXdb4502xcqYBFtYumK-FBGkKPIRBVOs0r3Q4_bA/viewform"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    referrerpolicy="no-referrer"
+                    class="button-link secondary-button"
+                >
+                    LEAVE YOUR MARK
+                </a>
 
-            const unlockedSection =
-                document.getElementById("unlockedSection");
+            </div>
 
-            if (normalizedResponse === "no") {
+        </section>
 
-                result.innerHTML =
-                    "<strong>CORRECT</strong><br><br>" +
-                    "FLAG{VERIFY_BEFORE_TRUST}<br><br>" +
-                    "Human verification matters.";
+    </main>
 
-                unlockedSection.classList.remove("hidden");
+    <footer>
+        <p>
+            Official SIGNALGHOST-X DEF CON challenge.
+        </p>
 
-            } else if (normalizedResponse === "yes") {
-
-                result.innerHTML =
-                    "<strong>FAILED</strong><br><br>" +
-                    "You trusted the request without verification.<br><br>" +
-                    "Verify identity through an approved secondary channel.";
-
-                unlockedSection.classList.add("hidden");
-
-            } else {
-
-                result.innerHTML =
-                    "INVALID RESPONSE<br><br>" +
-                    "Enter YES or NO.";
-
-                unlockedSection.classList.add("hidden");
-            }
-        }
-    </script>
+        <p class="security-notice">
+            This site will never request passwords, payment information,
+            software installation, or browser permissions.
+        </p>
+    </footer>
 
 </body>
 </html>
-```
